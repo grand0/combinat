@@ -839,7 +839,7 @@ class _SettingsPageState extends State<SettingsPage> {
             textAlign: TextAlign.center,
           ),
           const Text(
-            "v1.0.1",
+            "v1.1.0",
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
