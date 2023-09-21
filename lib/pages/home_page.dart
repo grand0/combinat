@@ -4,6 +4,7 @@ import 'package:combinat/app.dart';
 import 'package:combinat/math/formulas.dart';
 import 'package:combinat/math/models.dart';
 import 'package:combinat/pages/common/number_field.dart';
+import 'package:combinat/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -52,7 +53,9 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                   selectedIndex: index,
-                  labelType: NavigationRailLabelType.none,
+                  labelType: isPointerDevice(context)
+                      ? NavigationRailLabelType.none
+                      : NavigationRailLabelType.selected,
                   destinations: const [
                     NavigationRailDestination(
                       icon: Icon(Icons.calculate_outlined),
@@ -71,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                   groupAlignment: 0.0,
-                  extended: hovering,
+                  extended: isPointerDevice(context) ? hovering : false,
                   leading: Image.asset(
                     "assets/icon.png",
                     width: 48,
@@ -262,12 +265,22 @@ class _FormulasPageState extends State<FormulasPage> {
                                   vertical: 8.0,
                                   horizontal: 24.0,
                                 ),
-                                child: Text(
-                                  "Result: $_result",
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: const TextStyle(fontSize: 28),
+                                    children: <TextSpan>[
+                                      const TextSpan(
+                                        text: "= ",
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                      TextSpan(
+                                        text: "$_result",
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -623,12 +636,22 @@ class _ModelsPageState extends State<ModelsPage> {
                                   vertical: 8.0,
                                   horizontal: 24.0,
                                 ),
-                                child: Text(
-                                  "Result: $_result",
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: const TextStyle(fontSize: 28),
+                                    children: <TextSpan>[
+                                      const TextSpan(
+                                        text: "= ",
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                      TextSpan(
+                                        text: "$_result",
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -867,7 +890,10 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const Text(
             "v1.0.0",
-            style: TextStyle(fontSize: 14, color: Colors.grey,),
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
