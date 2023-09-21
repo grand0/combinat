@@ -4,11 +4,14 @@ import 'package:combinat/app.dart';
 import 'package:combinat/math/formulas.dart';
 import 'package:combinat/math/models.dart';
 import 'package:combinat/pages/common/number_field.dart';
+import 'package:combinat/pages/common/result_widget.dart';
 import 'package:combinat/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
+
+import '../math/fraction.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,6 +50,7 @@ class _HomePageState extends State<HomePage> {
                   });
                 },
                 child: NavigationRail(
+                  elevation: 2.0,
                   onDestinationSelected: (index) {
                     setState(() {
                       this.index = index;
@@ -496,7 +500,7 @@ class ModelsPage extends StatefulWidget {
 
 class _ModelsPageState extends State<ModelsPage> {
   final _formKey = GlobalKey<FormState>();
-  double? _result;
+  Fraction? _result;
   Model _model = Model.allMarked;
   bool _hovering = false;
   List<Widget> _fields = [];
@@ -615,90 +619,36 @@ class _ModelsPageState extends State<ModelsPage> {
                       ),
                       if (_result != null) ...[
                         const SizedBox(height: 24),
-                        GestureDetector(
-                          onTap: () {
-                            Clipboard.setData(ClipboardData(text: "$_result"));
+                        ResultWidget(
+                          result: "$_result",
+                          copyCallback: (copied) {
                             _showSnackBar(
                               icon: Icon(
                                 Icons.copy,
                                 color:
-                                    Theme.of(context).colorScheme.onSecondary,
+                                Theme.of(context).colorScheme.onSecondary,
                               ),
-                              text: Text("Copied $_result"),
+                              text: Text("Copied $copied"),
                             );
                           },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                  horizontal: 24.0,
-                                ),
-                                child: RichText(
-                                  text: TextSpan(
-                                    style: const TextStyle(fontSize: 28),
-                                    children: <TextSpan>[
-                                      const TextSpan(
-                                        text: "= ",
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                      TextSpan(
-                                        text: "$_result",
-                                        style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                        ),
+                        // const SizedBox(height: 8),
+                        ResultWidget(
+                          result: "(${_result?.doubleValue()})",
+                          resultToCopy: "${_result?.doubleValue()}",
+                          prefix: "",
+                          fontSize: 16,
+                          style: const TextStyle(color: Colors.grey),
+                          copyCallback: (copied) {
+                            _showSnackBar(
+                              icon: Icon(
+                                Icons.copy,
+                                color:
+                                Theme.of(context).colorScheme.onSecondary,
                               ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  width: 24,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      stops: const [0.2, 1.0],
-                                      colors: [
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .background
-                                            .withAlpha(0),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                  width: 24,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      stops: const [0.0, 0.8],
-                                      colors: [
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .background
-                                            .withAlpha(0),
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                              text: Text("Copied $copied"),
+                            );
+                          },
                         ),
                       ],
                       const SizedBox(height: 16),
@@ -869,7 +819,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: ListView(
         children: [
           SwitchListTile.adaptive(

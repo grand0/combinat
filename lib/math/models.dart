@@ -1,5 +1,7 @@
 import 'package:combinat/math/formulas.dart';
 
+import 'fraction.dart';
+
 enum Model {
   allMarked(
     name: "All marked",
@@ -28,7 +30,7 @@ enum Model {
     this.multiVariables = const <String>[],
   });
 
-  double? calculate(List<BigInt> vars) {
+  Fraction? calculate(List<BigInt> vars) {
     switch (this) {
       case allMarked:
         if (vars.length != 3) {
@@ -47,7 +49,7 @@ enum Model {
         final numer = Formula.combinationsNoRep.calculate([m, k]);
         final denom = Formula.combinationsNoRep.calculate([n, k]);
         if (numer != null && denom != null) {
-          return numer / denom;
+          return Fraction(numerator: numer, denominator: denom);
         }
         return null;
       case rMarked:
@@ -71,11 +73,12 @@ enum Model {
         } else if (r > m) {
           throw const ModelException("r can't be greater than m.");
         }
-        // TODO: remove !
-        final numer = Formula.combinationsNoRep.calculate([m, r])! * Formula.combinationsNoRep.calculate([n-m, k-r])!;
+        final cmr = Formula.combinationsNoRep.calculate([m, r]);
+        final cnk = Formula.combinationsNoRep.calculate([n-m, k-r]);
         final denom = Formula.combinationsNoRep.calculate([n, k]);
-        if (numer != null && denom != null) {
-          return numer / denom;
+        if (cmr != null && cnk != null && denom != null) {
+          final numer = cmr * cnk;
+          return Fraction(numerator: numer, denominator: denom);
         }
         return null;
     }

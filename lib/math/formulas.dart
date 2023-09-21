@@ -56,7 +56,7 @@ enum Formula {
         if (n < k) {
           throw const FormulaException("k can't be greater than n.");
         }
-        return (n.fact() / (n - k).fact()).toBigInt();
+        return n.fact() ~/ (n - k).fact();
       case placementsWithRep:
         if (vars.length != 2) {
           throw ArgumentError("This enum element needs 2 variables in the list.");
@@ -83,7 +83,7 @@ enum Formula {
           throw const FormulaException("The sum of the n_i variables must equal to n.");
         }
         final denom = vars.skip(1).fold(BigInt.one, (previousValue, element) => previousValue * element.fact());
-        return (n.fact() / denom).toBigInt();
+        return n.fact() ~/ denom;
       case combinationsNoRep:
         if (vars.length != 2) {
           throw ArgumentError("This enum element needs 2 variables in the list.");
@@ -93,7 +93,7 @@ enum Formula {
         if (n < k) {
           throw const FormulaException("k can't be greater than n.");
         }
-        return (n.fact() / (k.fact() * (n - k).fact())).toBigInt();
+        return n.fact() ~/ (k.fact() * (n - k).fact());
       case combinationsWithRep:
         if (vars.length != 2) {
           throw ArgumentError("This enum element needs 2 variables in the list.");
@@ -103,7 +103,7 @@ enum Formula {
         if (n < k) {
           throw const FormulaException("k can't be greater than n.");
         }
-        return ((n + k - BigInt.one).fact() / (k.fact() * (n - BigInt.one).fact())).toBigInt();
+        return (n + k - BigInt.one).fact() ~/ (k.fact() * (n - BigInt.one).fact());
     }
   }
 }
