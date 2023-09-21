@@ -889,7 +889,7 @@ class _SettingsPageState extends State<SettingsPage> {
             textAlign: TextAlign.center,
           ),
           const Text(
-            "v1.0.0",
+            "v1.0.1",
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
