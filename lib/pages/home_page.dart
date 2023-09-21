@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../math/fraction.dart';
+import '../prefs.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -519,6 +520,8 @@ class _ModelsPageState extends State<ModelsPage> {
         });
       });
     }
+    int? fractionDigits = prefs.getInt("fraction_digits");
+    if (fractionDigits == -1) fractionDigits = null;
     return Center(
       child: SingleChildScrollView(
         child: SizedBox(
@@ -626,16 +629,15 @@ class _ModelsPageState extends State<ModelsPage> {
                               icon: Icon(
                                 Icons.copy,
                                 color:
-                                Theme.of(context).colorScheme.onSecondary,
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                               text: Text("Copied $copied"),
                             );
                           },
                         ),
-                        // const SizedBox(height: 8),
                         ResultWidget(
-                          result: "(${_result?.doubleValue()})",
-                          resultToCopy: "${_result?.doubleValue()}",
+                          result: "(${fractionDigits == null ? _result?.doubleValue() : _result?.doubleValue().toStringAsFixed(fractionDigits)})",
+                          resultToCopy: "${fractionDigits == null ? _result?.doubleValue() : _result?.doubleValue().toStringAsFixed(fractionDigits)}",
                           prefix: "",
                           fontSize: 16,
                           style: const TextStyle(color: Colors.grey),
@@ -644,7 +646,7 @@ class _ModelsPageState extends State<ModelsPage> {
                               icon: Icon(
                                 Icons.copy,
                                 color:
-                                Theme.of(context).colorScheme.onSecondary,
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                               text: Text("Copied $copied"),
                             );
@@ -822,10 +824,66 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: const EdgeInsets.all(8.0),
       child: ListView(
         children: [
-          SwitchListTile.adaptive(
-            title: const Text("Dark mode"),
-            value: Theme.of(context).brightness == Brightness.dark,
-            onChanged: (value) => App.switchThemeMode(context),
+          ListTile(
+            title: const Text("Theme mode"),
+            trailing: DropdownButton<ThemeMode>(
+              value: switch (prefs.getString("theme_mode")) {
+                "light" => ThemeMode.light,
+                "dark" => ThemeMode.dark,
+                _ => ThemeMode.system,
+              },
+              onChanged: (value) {
+                App.changeThemeMode(context, value ?? ThemeMode.system);
+                setState(() {
+                  final prefValue = switch (value) {
+                    ThemeMode.light => "light",
+                    ThemeMode.dark => "dark",
+                    _ => "system",
+                  };
+                  prefs.setString("theme_mode", prefValue);
+                });
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: ThemeMode.system,
+                  child: Text("System"),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.light,
+                  child: Text("Light"),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.dark,
+                  child: Text("Dark"),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            title: const Text("Fraction digits"),
+            trailing: DropdownButton<int>(
+              value: prefs.getInt("fraction_digits") ?? -1,
+              onChanged: (value) {
+                setState(() {
+                  prefs.setInt("fraction_digits", value ?? -1);
+                });
+              },
+              items: List.generate(
+                11,
+                (index) {
+                  if (index == 0) {
+                    return const DropdownMenuItem(
+                      value: -1,
+                      child: Text("Not fixed"),
+                    );
+                  }
+                  return DropdownMenuItem(
+                    value: index,
+                    child: Text("${index}"),
+                  );
+                },
+              ),
+            ),
           ),
           const SizedBox(height: 64),
           Image.asset(
@@ -839,7 +897,7 @@ class _SettingsPageState extends State<SettingsPage> {
             textAlign: TextAlign.center,
           ),
           const Text(
-            "v1.1.0",
+            "v1.2.0",
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
