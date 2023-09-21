@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:combinat/prefs.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/home_page.dart';
@@ -8,13 +9,9 @@ import 'theme.dart' as theme;
 class App extends StatefulWidget {
   const App({super.key});
 
-  static void switchThemeMode(BuildContext context) {
+  static void changeThemeMode(BuildContext context, ThemeMode mode) {
     final state = context.findAncestorStateOfType<_AppState>()!;
-    final themeMode = switch (Theme.of(context).brightness) {
-      Brightness.light => ThemeMode.dark,
-      Brightness.dark => ThemeMode.light,
-    };
-    state.changeThemeMode(themeMode);
+    state.changeThemeMode(mode);
   }
 
   @override
@@ -23,6 +20,16 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   ThemeMode _themeMode = ThemeMode.system;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeMode = switch (prefs.getString("theme_mode")) {
+      "light" => ThemeMode.light,
+      "dark" => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
