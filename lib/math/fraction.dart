@@ -1,21 +1,24 @@
 class Fraction {
-  late final BigInt numerator;
-  late final BigInt denominator;
+  final BigInt numerator;
+  final BigInt denominator;
 
   Fraction({
-    required BigInt numerator,
-    required BigInt denominator,
+    required this.numerator,
+    required this.denominator,
   }) {
     if (denominator == BigInt.zero) {
       throw UnsupportedError("Denominator can't be 0.");
     }
-
-    final gcd = numerator.gcd(denominator);
-    this.numerator = numerator ~/ gcd;
-    this.denominator = denominator ~/ gcd;
   }
 
-  double doubleValue() => numerator / denominator;
+  bool get isShortForm => numerator.gcd(denominator) == BigInt.one;
+
+  Fraction get shortForm {
+    final gcd = numerator.gcd(denominator);
+    return Fraction(numerator: numerator ~/ gcd, denominator: denominator ~/ gcd);
+  }
+
+  double get doubleValue => numerator / denominator;
 
   @override
   String toString() => "$numerator/$denominator";

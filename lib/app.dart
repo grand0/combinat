@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:combinat/prefs.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/home_page.dart';
+import 'pages/home_page/home_page.dart';
 import 'theme.dart' as theme;
 
 class App extends StatefulWidget {
