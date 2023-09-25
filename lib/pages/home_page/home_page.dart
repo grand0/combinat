@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                   if (index != 2)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: IconButton.filledTonal(
+                      child: IconButton(
                         onPressed: () {
                           if (isWideEnough(context)) {
                             setState(() {
@@ -108,7 +108,11 @@ class _HomePageState extends State<HomePage> {
                           } else {
                             showModalBottomSheet(
                               context: context,
-                              builder: (_) => const HistoryWidget(),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              builder: (context) => const HistoryWidget(),
+                              elevation: 0,
                             );
                           }
                         },
@@ -124,7 +128,7 @@ class _HomePageState extends State<HomePage> {
               minWidth: 200,
               maxWidth: 400,
               show: isWideEnough(context) && showHistory && index != 2,
-              child: HistoryWidget(),
+              child: const HistoryWidget(),
             ),
           ],
         ),
