@@ -11,7 +11,7 @@ class HistoryStorage {
   static int addListener(VoidCallback listener) {
     int key;
     do {
-      key = Random().nextInt(1 << 32);
+      key = Random().nextInt(1 << 16 + 1);
     } while (listeners.containsKey(key));
 
     listeners.putIfAbsent(key, () => listener);
