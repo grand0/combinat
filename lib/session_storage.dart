@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'math/fraction.dart';
@@ -5,12 +6,22 @@ import 'math/fraction.dart';
 class HistoryStorage {
   static final List<MapEntry<String, String>> history = <MapEntry<String, String>>[];
 
-  static final List<VoidCallback> listeners = <VoidCallback>[];
+  static final Map<int, VoidCallback> listeners = <int, VoidCallback>{0: (){}};
 
-  static addListener(VoidCallback listener) => listeners.add(listener);
+  static int addListener(VoidCallback listener) {
+    int key;
+    do {
+      key = Random().nextInt(1 << 32);
+    } while (listeners.containsKey(key));
+
+    listeners.putIfAbsent(key, () => listener);
+    return key;
+  }
+
+  static void removeListener(int key) => listeners.remove(key);
 
   static _notifyListeners() {
-    for (final l in listeners) {
+    for (final l in listeners.values) {
       l.call();
     }
   }
