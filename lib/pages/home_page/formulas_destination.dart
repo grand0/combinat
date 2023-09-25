@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../../math/formulas.dart';
+import '../../utils.dart';
 import '../common/number_field.dart';
 
 class FormulasDestination extends StatefulWidget {
@@ -113,7 +114,8 @@ class _FormulasDestinationState extends State<FormulasDestination>
                                         _result!);
                                   }
                                 } on FormulaException catch (e) {
-                                  _showSnackBar(
+                                  showSnackBar(
+                                    context: context,
                                     icon: Icon(
                                       Icons.error_outline,
                                       color: Theme.of(context)
@@ -123,7 +125,8 @@ class _FormulasDestinationState extends State<FormulasDestination>
                                     text: Text("${e.message}"),
                                   );
                                 } catch (e) {
-                                  _showSnackBar(
+                                  showSnackBar(
+                                    context: context,
                                     icon: const Icon(
                                       Icons.error_outline,
                                       color: Colors.red,
@@ -149,7 +152,8 @@ class _FormulasDestinationState extends State<FormulasDestination>
                         ResultWidget(
                           result: "$_result",
                           copyCallback: (copied) {
-                            _showSnackBar(
+                            showSnackBar(
+                              context: context,
                               icon: Icon(
                                 Icons.copy,
                                 color:
@@ -288,31 +292,5 @@ class _FormulasDestinationState extends State<FormulasDestination>
       _multiVarLastIndexes.add(_fields.length - 1);
       _multiVarCounts.add(1);
     }
-  }
-
-  void _showSnackBar({Widget? icon, required Widget text}) {
-    ScaffoldMessenger.of(context)
-      ..clearSnackBars()
-      ..showSnackBar(
-        SnackBar(
-          content: (icon != null)
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    icon,
-                    const SizedBox(width: 8.0),
-                    Expanded(child: text),
-                  ],
-                )
-              : text,
-          dismissDirection: DismissDirection.horizontal,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          margin: const EdgeInsets.all(8.0),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
   }
 }

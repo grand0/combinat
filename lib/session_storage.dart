@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'math/fraction.dart';
 
 class HistoryStorage {
-  static final List<String> history = <String>[];
+  static final List<MapEntry<String, String>> history = <MapEntry<String, String>>[];
 
   static final List<VoidCallback> listeners = <VoidCallback>[];
 
@@ -17,8 +17,8 @@ class HistoryStorage {
 
   static bool get isEmpty => history.isEmpty;
 
-  static void add(String tex) {
-    history.insert(0, tex);
+  static void add(String tex, String result) {
+    history.insert(0, MapEntry(tex, result));
     _notifyListeners();
   }
 
@@ -28,11 +28,11 @@ class HistoryStorage {
   }
 
   static void addWithBigInt(String tex, BigInt result) {
-    add("$tex=$result");
+    add("$tex=$result", "$result");
   }
 
   static void addWithFraction(String tex, Fraction result) {
     result = result.shortForm;
-    add("$tex=\\frac{${result.numerator}}{${result.denominator}}");
+    add("$tex=\\frac{${result.numerator}}{${result.denominator}}", "$result");
   }
 }
