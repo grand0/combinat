@@ -18,7 +18,10 @@ class ModelsDestination extends StatefulWidget {
   State<ModelsDestination> createState() => _ModelsDestinationState();
 }
 
-class _ModelsDestinationState extends State<ModelsDestination> {
+class _ModelsDestinationState extends State<ModelsDestination> with AutomaticKeepAliveClientMixin<ModelsDestination> {
+  @override
+  bool get wantKeepAlive => true;
+
   final _formKey = GlobalKey<FormState>();
   Fraction? _result;
   Model _model = Model.allMarked;
@@ -31,6 +34,8 @@ class _ModelsDestinationState extends State<ModelsDestination> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     if (_firstBuild) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         setState(() {

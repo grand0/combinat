@@ -20,10 +20,16 @@ class _HomePageState extends State<HomePage> {
     const ModelsDestination(),
     const SettingsDestination(),
   ];
-
+  late final PageController pageController;
   int index = 0;
   bool hovering = false;
   bool showHistory = true;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(initialPage: index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +55,7 @@ class _HomePageState extends State<HomePage> {
                   onDestinationSelected: (index) {
                     setState(() {
                       this.index = index;
+                      pageController.jumpToPage(index);
                     });
                   },
                   selectedIndex: index,
@@ -84,7 +91,11 @@ class _HomePageState extends State<HomePage> {
               child: Stack(
                 alignment: Alignment.topRight,
                 children: [
-                  pages[index],
+                  PageView(
+                    controller: pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: pages,
+                  ),
                   if (index != 2)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -124,6 +135,7 @@ class _HomePageState extends State<HomePage> {
               onTap: (index) {
                 setState(() {
                   this.index = index;
+                  pageController.jumpToPage(index);
                 });
               },
               items: const [

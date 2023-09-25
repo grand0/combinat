@@ -16,7 +16,11 @@ class FormulasDestination extends StatefulWidget {
   State<FormulasDestination> createState() => _FormulasDestinationState();
 }
 
-class _FormulasDestinationState extends State<FormulasDestination> {
+class _FormulasDestinationState extends State<FormulasDestination>
+    with AutomaticKeepAliveClientMixin<FormulasDestination> {
+  @override
+  bool get wantKeepAlive => true;
+
   final _formKey = GlobalKey<FormState>();
   BigInt? _result;
   Formula _formula = Formula.placementsNoRep;
@@ -29,6 +33,8 @@ class _FormulasDestinationState extends State<FormulasDestination> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     if (_firstBuild) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         setState(() {
