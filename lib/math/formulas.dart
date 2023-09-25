@@ -136,7 +136,7 @@ enum Formula {
         final n = vars[0];
         final niCommaSep = vars.skip(1).join(",");
         final niFactMult = "${vars.skip(1).join("!")}!";
-        return "P_{$n}($niCommaSep)=\\frac{$n}{$niFactMult}";
+        return "P_{$n}($niCommaSep)=\\frac{$n!}{$niFactMult}";
       case combinationsNoRep:
         if (vars.length != 2) {
           throw ArgumentError("This enum element needs 2 variables in the list.");
