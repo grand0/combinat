@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:combinat/session_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
@@ -106,6 +107,9 @@ class _ModelsDestinationState extends State<ModelsDestination> {
                                     .toList();
                                 try {
                                   _result = _model.calculate(vars);
+                                  if (_result != null) {
+                                    HistoryStorage.addWithFraction(_model.tex, _result!);
+                                  }
                                 } on ModelException catch (e) {
                                   _showSnackBar(
                                     icon: Icon(

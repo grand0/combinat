@@ -1,6 +1,8 @@
+import 'package:combinat/pages/common/resizable_panel.dart';
 import 'package:combinat/responsive.dart';
 import 'package:flutter/material.dart';
 
+import '../common/history_widget.dart';
 import 'formulas_destination.dart';
 import 'models_destination.dart';
 import 'settings_destination.dart';
@@ -21,6 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   int index = 0;
   bool hovering = false;
+  bool showHistory = true;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            if (MediaQuery.of(context).size.width >= 640)
+            if (isWideEnough(context))
               MouseRegion(
                 onEnter: (_) {
                   setState(() {
@@ -78,7 +81,39 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             Expanded(
-              child: pages[index],
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  pages[index],
+                  if (index != 2)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton.filledTonal(
+                        onPressed: () {
+                          if (isWideEnough(context)) {
+                            setState(() {
+                              showHistory = !showHistory;
+                            });
+                          } else {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (_) => const HistoryWidget(),
+                            );
+                          }
+                        },
+                        isSelected: isWideEnough(context) && showHistory,
+                        icon: const Icon(Icons.history),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            ResizablePanel(
+              initialWidth: 300,
+              minWidth: 200,
+              maxWidth: 400,
+              show: isWideEnough(context) && showHistory && index != 2,
+              child: HistoryWidget(),
             ),
           ],
         ),

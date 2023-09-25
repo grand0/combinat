@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:combinat/pages/common/result_widget.dart';
+import 'package:combinat/session_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
@@ -100,6 +101,11 @@ class _FormulasDestinationState extends State<FormulasDestination> {
                                     .toList();
                                 try {
                                   _result = _formula.calculate(vars);
+                                  if (_result != null) {
+                                    HistoryStorage.addWithBigInt(
+                                        _formula.texWithGivenVariables(vars),
+                                        _result!);
+                                  }
                                 } on FormulaException catch (e) {
                                   _showSnackBar(
                                     icon: Icon(

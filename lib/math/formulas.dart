@@ -3,33 +3,33 @@ import 'package:combinat/extensions.dart';
 enum Formula {
   placementsNoRep(
     name: "Placements (no repetitions)",
-    tex: r"A^k_n=\frac{n!}{(n-k)!}",
+    tex: r"A^{k}_{n}=\frac{n!}{(n-k)!}",
     variables: ["n", "k"],
   ),
   placementsWithRep(
     name: "Placements (with repetitions)",
-    tex: r"\overline{A}^k_n=n^k",
+    tex: r"\overline{A}^{k}_{n}=n^{k}",
     variables: ["n", "k"],
   ),
   permutationsNoRep(
     name: "Permutations (no repetitions)",
-    tex: r"P_n=n!",
+    tex: r"P_{n}=n!",
     variables: ["n"],
   ),
   permutationsWithRep(
     name: "Permutations (with repetitions)",
-    tex: r"P_n(n_1,n_2,...,n_k)=\frac{n!}{n_1!n_2!...n_k!}",
+    tex: r"P_{n}(n_1,n_2,...,n_{k})=\frac{n!}{n_1!n_2!...n_{k}!}",
     variables: ["n"],
     multiVariables: ["n"],
   ),
   combinationsNoRep(
     name: "Combinations (no repetitions)",
-    tex: r"C^k_n=\frac{n!}{k!(n-k)!}",
+    tex: r"C^{k}_{n}=\frac{n!}{k!(n-k)!}",
     variables: ["n", "k"],
   ),
   combinationsWithRep(
     name: "Combinations (with repetitions)",
-    tex: r"\overline{C}^k_n=C^k_{n+k-1}",
+    tex: r"\overline{C}^{k}_{n}=C^{k}_{n+k-1}",
     variables: ["n", "k"],
   );
 
@@ -45,7 +45,7 @@ enum Formula {
   final List<String> variables;
   final List<String> multiVariables;
 
-  BigInt? calculate(List<BigInt> vars) {
+  BigInt calculate(List<BigInt> vars) {
     switch (this) {
       case placementsNoRep:
         if (vars.length != 2) {
@@ -104,6 +104,53 @@ enum Formula {
           throw const FormulaException("k can't be greater than n.");
         }
         return (n + k - BigInt.one).fact() ~/ (k.fact() * (n - BigInt.one).fact());
+    }
+  }
+
+  String texWithGivenVariables(List<BigInt> vars) {
+    switch (this) {
+      case placementsNoRep:
+        if (vars.length != 2) {
+          throw ArgumentError("This enum element needs 2 variables in the list.");
+        }
+        final n = vars[0];
+        final k = vars[1];
+        return tex.replaceAll("n", "$n").replaceAll("k", "$k");
+      case placementsWithRep:
+        if (vars.length != 2) {
+          throw ArgumentError("This enum element needs 2 variables in the list.");
+        }
+        final n = vars[0];
+        final k = vars[1];
+        return "\\overline{A}^{$k}_{$n}=$n^{$k}";
+      case permutationsNoRep:
+        if (vars.length != 1) {
+          throw ArgumentError("This enum element needs 1 variable in the list.");
+        }
+        final n = vars[0];
+        return tex.replaceAll("n", "$n");
+      case permutationsWithRep:
+        if (vars.length < 2) {
+          throw ArgumentError("This enum element needs at least 2 variables in the list.");
+        }
+        final n = vars[0];
+        final niCommaSep = vars.skip(1).join(",");
+        final niFactMult = "${vars.skip(1).join("!")}!";
+        return "P_{$n}($niCommaSep)=\\frac{$n}{$niFactMult}";
+      case combinationsNoRep:
+        if (vars.length != 2) {
+          throw ArgumentError("This enum element needs 2 variables in the list.");
+        }
+        final n = vars[0];
+        final k = vars[1];
+        return tex.replaceAll("n", "$n").replaceAll("k", "$k");
+      case combinationsWithRep:
+        if (vars.length != 2) {
+          throw ArgumentError("This enum element needs 2 variables in the list.");
+        }
+        final n = vars[0];
+        final k = vars[1];
+        return "\\overline{C}^{$k}_{$n}=C^{$k}_{${n+k-BigInt.one}}";
     }
   }
 }

@@ -8,3 +8,5 @@ bool isTouchDevice(BuildContext context) {
 }
 
 bool isPointerDevice(BuildContext context) => !isTouchDevice(context);
+
+bool isWideEnough(BuildContext context) => MediaQuery.of(context).size.width >= 640;
