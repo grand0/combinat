@@ -11,10 +11,25 @@ class HistoryWidget extends StatefulWidget {
 }
 
 class _HistoryWidgetState extends State<HistoryWidget> {
+  int listenerKey = 0;
+
   @override
   void initState() {
     super.initState();
-    HistoryStorage.addListener(() => setState(() {}));
+    listenerKey = HistoryStorage.addListener(() => setState(() {}));
+  }
+
+  @override
+  void didUpdateWidget(covariant HistoryWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    HistoryStorage.removeListener(listenerKey);
+    listenerKey = HistoryStorage.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    HistoryStorage.removeListener(listenerKey);
+    super.dispose();
   }
 
   @override
