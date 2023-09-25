@@ -5,14 +5,16 @@ import 'fraction.dart';
 enum Model {
   allMarked(
     name: "All marked",
-    description: "n items, m of them are marked. k random items are taken (k < m). What is probability that all taken items are marked?",
-    tex: r"P(A)=\frac{C^k_m}{C^k_n}",
+    description:
+        "n items, m of them are marked. k random items are taken (k < m). What is probability that all taken items are marked?",
+    tex: r"P(A)=\frac{C^{k}_{m}}{C^{k}_{n}}",
     variables: ["n", "m", "k"],
   ),
   rMarked(
     name: "r marked",
-    description: "n items, m of them are marked. k random items are taken (k < m). What is probability that r of the taken items are marked?",
-    tex: r"P(A)=\frac{C^r_mC^{k-r}_{n-m}}{C^k_n}",
+    description:
+        "n items, m of them are marked. k random items are taken (k < m). What is probability that r of the taken items are marked?",
+    tex: r"P(A)=\frac{C^{r}_{m}C^{k-r}_{n-m}}{C^{k}_{n}}",
     variables: ["n", "m", "k", "r"],
   );
 
@@ -74,13 +76,38 @@ enum Model {
           throw const ModelException("r can't be greater than m.");
         }
         final cmr = Formula.combinationsNoRep.calculate([m, r]);
-        final cnk = Formula.combinationsNoRep.calculate([n-m, k-r]);
+        final cnk = Formula.combinationsNoRep.calculate([n - m, k - r]);
         final denom = Formula.combinationsNoRep.calculate([n, k]);
         if (cmr != null && cnk != null && denom != null) {
           final numer = cmr * cnk;
           return Fraction(numerator: numer, denominator: denom);
         }
         return null;
+    }
+  }
+
+  String texWithGivenVariables(List<BigInt> vars) {
+    switch (this) {
+      case allMarked:
+        if (vars.length != 3) {
+          throw ArgumentError("This model requires 3 variables.");
+        }
+        final n = vars[0];
+        final m = vars[1];
+        final k = vars[2];
+        return tex
+            .replaceAll("n", "$n")
+            .replaceAll("m", "$m")
+            .replaceAll("k", "$k");
+      case rMarked:
+        if (vars.length != 4) {
+          throw ArgumentError("This model requires 4 variables.");
+        }
+        final n = vars[0];
+        final m = vars[1];
+        final k = vars[2];
+        final r = vars[3];
+        return "P(A)=\\frac{C^{$r}_{$m}C^{${k-r}}_{${n-m}}}{C^{$k}_{$n}}";
     }
   }
 }
