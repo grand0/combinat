@@ -113,7 +113,7 @@ class _ModelsDestinationState extends State<ModelsDestination> with AutomaticKee
                                 try {
                                   _result = _model.calculate(vars);
                                   if (_result != null) {
-                                    HistoryStorage.addWithFraction(_model.tex, _result!);
+                                    HistoryStorage.addWithFraction(_model.texWithGivenVariables(vars), _result!);
                                   }
                                 } on ModelException catch (e) {
                                   _showSnackBar(
