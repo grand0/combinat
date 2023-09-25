@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 
 class ResultWidget extends StatelessWidget {
   const ResultWidget({
@@ -11,6 +12,8 @@ class ResultWidget extends StatelessWidget {
     this.fontSize,
     this.prefixStyle,
     this.style,
+    this.isTex = false,
+    this.alignment,
   });
 
   final String result;
@@ -20,6 +23,8 @@ class ResultWidget extends StatelessWidget {
   final double? fontSize;
   final TextStyle? prefixStyle;
   final TextStyle? style;
+  final bool isTex;
+  final AlignmentGeometry? alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,7 @@ class ResultWidget extends StatelessWidget {
         copyCallback?.call(resultToCopy ?? result);
       },
       child: Stack(
-        alignment: Alignment.center,
+        alignment: alignment ?? Alignment.center,
         children: [
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -37,27 +42,7 @@ class ResultWidget extends StatelessWidget {
               vertical: 8.0,
               horizontal: 24.0,
             ),
-            child: RichText(
-              text: TextSpan(
-                style: TextStyle(fontSize: fontSize ?? 28),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: prefix ?? "= ",
-                    style: prefixStyle ??
-                        const TextStyle(
-                          color: Colors.grey,
-                        ),
-                  ),
-                  TextSpan(
-                    text: result,
-                    style: style ??
-                        TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                  ),
-                ],
-              ),
-            ),
+            child: isTex ? _buildTex(context) : _buildRichText(context),
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -90,6 +75,41 @@ class ResultWidget extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTex(BuildContext context) {
+    return Math.tex(
+      "${prefix ?? ""}$result",
+      textStyle: style?.copyWith(fontSize: fontSize ?? 28) ??
+          TextStyle(
+            fontSize: fontSize ?? 28,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+    );
+  }
+
+  Widget _buildRichText(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(fontSize: fontSize ?? 28),
+        children: <TextSpan>[
+          TextSpan(
+            text: prefix ?? "= ",
+            style: prefixStyle ??
+                const TextStyle(
+                  color: Colors.grey,
+                ),
+          ),
+          TextSpan(
+            text: result,
+            style: style ??
+                TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
           ),
         ],
       ),

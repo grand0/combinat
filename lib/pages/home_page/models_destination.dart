@@ -8,6 +8,7 @@ import 'package:flutter_math_fork/flutter_math.dart';
 import '../../math/fraction.dart';
 import '../../math/models.dart';
 import '../../prefs.dart';
+import '../../utils.dart';
 import '../common/number_field.dart';
 import '../common/result_widget.dart';
 
@@ -116,7 +117,8 @@ class _ModelsDestinationState extends State<ModelsDestination> with AutomaticKee
                                     HistoryStorage.addWithFraction(_model.texWithGivenVariables(vars), _result!);
                                   }
                                 } on ModelException catch (e) {
-                                  _showSnackBar(
+                                  showSnackBar(
+                                    context: context,
                                     icon: Icon(
                                       Icons.error_outline,
                                       color: Theme.of(context)
@@ -126,7 +128,8 @@ class _ModelsDestinationState extends State<ModelsDestination> with AutomaticKee
                                     text: Text("${e.message}"),
                                   );
                                 } catch (e) {
-                                  _showSnackBar(
+                                  showSnackBar(
+                                    context: context,
                                     icon: const Icon(
                                       Icons.error_outline,
                                       color: Colors.red,
@@ -152,7 +155,8 @@ class _ModelsDestinationState extends State<ModelsDestination> with AutomaticKee
                         ResultWidget(
                           result: "$_result",
                           copyCallback: (copied) {
-                            _showSnackBar(
+                            showSnackBar(
+                              context: context,
                               icon: Icon(
                                 Icons.copy,
                                 color:
@@ -166,7 +170,8 @@ class _ModelsDestinationState extends State<ModelsDestination> with AutomaticKee
                           ResultWidget(
                             result: "${_result?.shortForm}",
                             copyCallback: (copied) {
-                              _showSnackBar(
+                              showSnackBar(
+                                context: context,
                                 icon: Icon(
                                   Icons.copy,
                                   color:
@@ -185,7 +190,8 @@ class _ModelsDestinationState extends State<ModelsDestination> with AutomaticKee
                           fontSize: 16,
                           style: const TextStyle(color: Colors.grey),
                           copyCallback: (copied) {
-                            _showSnackBar(
+                            showSnackBar(
+                              context: context,
                               icon: Icon(
                                 Icons.copy,
                                 color:
@@ -324,31 +330,5 @@ class _ModelsDestinationState extends State<ModelsDestination> with AutomaticKee
       _multiVarLastIndexes.add(_fields.length - 1);
       _multiVarCounts.add(1);
     }
-  }
-
-  void _showSnackBar({Widget? icon, required Widget text}) {
-    ScaffoldMessenger.of(context)
-      ..clearSnackBars()
-      ..showSnackBar(
-        SnackBar(
-          content: (icon != null)
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    icon,
-                    const SizedBox(width: 8.0),
-                    Expanded(child: text),
-                  ],
-                )
-              : text,
-          dismissDirection: DismissDirection.horizontal,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          margin: const EdgeInsets.all(8.0),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
   }
 }

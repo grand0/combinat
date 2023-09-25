@@ -1,6 +1,7 @@
+import 'package:combinat/pages/common/result_widget.dart';
 import 'package:combinat/session_storage.dart';
+import 'package:combinat/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
 
 class HistoryWidget extends StatefulWidget {
   const HistoryWidget({super.key});
@@ -56,13 +57,21 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                   children: HistoryStorage.history
                       .map(
                         (e) => ListTile(
-                          title: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Math.tex(
-                              e,
-                              textStyle: TextStyle(fontSize: 20),
+                          title: ResultWidget(
+                            result: e.key,
+                            resultToCopy: e.value,
+                            copyCallback: (copied) => showSnackBar(
+                              context: context,
+                              text: Text("Copied $copied"),
+                              icon: Icon(
+                                Icons.copy,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
+                              ),
                             ),
+                            fontSize: 20,
+                            alignment: Alignment.centerLeft,
+                            isTex: true,
                           ),
                         ),
                       )
