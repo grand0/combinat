@@ -96,7 +96,7 @@ class _SettingsDestinationState extends State<SettingsDestination> {
                 textAlign: TextAlign.center,
               ),
               const Text(
-                "v1.4.0",
+                "v1.4.1",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
