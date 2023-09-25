@@ -38,7 +38,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 32.0),
           child: Text(
             "History",
             style: TextStyle(

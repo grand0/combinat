@@ -6,7 +6,7 @@ import 'math/fraction.dart';
 class HistoryStorage {
   static final List<MapEntry<String, String>> history = <MapEntry<String, String>>[];
 
-  static final Map<int, VoidCallback> listeners = <int, VoidCallback>{0: (){}};
+  static final Map<int, VoidCallback> listeners = <int, VoidCallback>{};
 
   static int addListener(VoidCallback listener) {
     int key;
