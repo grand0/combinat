@@ -12,7 +12,7 @@ enum Model {
   rMarked(
     name: "r marked",
     description: "n items, m of them are marked. k random items are taken (k < m). What is probability that r of the taken items are marked?",
-    tex: r"P(A)=\frac{C^k_mC^{k-r}_{n-m}}{C^k_n}",
+    tex: r"P(A)=\frac{C^r_mC^{k-r}_{n-m}}{C^k_n}",
     variables: ["n", "m", "k", "r"],
   );
 
