@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'math/fraction.dart';
+import '../math/fraction.dart';
 
 class HistoryStorage {
   static final List<MapEntry<String, String>> history = <MapEntry<String, String>>[];

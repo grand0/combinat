@@ -1,5 +1,4 @@
-import 'package:combinat/math/formulas.dart';
-
+import 'formulas.dart';
 import 'fraction.dart';
 
 enum Model {
@@ -50,10 +49,7 @@ enum Model {
         }
         final numer = Formula.combinationsNoRep.calculate([m, k]);
         final denom = Formula.combinationsNoRep.calculate([n, k]);
-        if (numer != null && denom != null) {
-          return Fraction(numerator: numer, denominator: denom);
-        }
-        return null;
+        return Fraction(numerator: numer, denominator: denom);
       case rMarked:
         if (vars.length != 4) {
           throw ArgumentError("This model requires 4 variables.");
@@ -78,11 +74,8 @@ enum Model {
         final cmr = Formula.combinationsNoRep.calculate([m, r]);
         final cnk = Formula.combinationsNoRep.calculate([n - m, k - r]);
         final denom = Formula.combinationsNoRep.calculate([n, k]);
-        if (cmr != null && cnk != null && denom != null) {
-          final numer = cmr * cnk;
-          return Fraction(numerator: numer, denominator: denom);
-        }
-        return null;
+        final numer = cmr * cnk;
+        return Fraction(numerator: numer, denominator: denom);
     }
   }
 

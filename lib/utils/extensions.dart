@@ -10,16 +10,6 @@ extension IntExt on int {
       _ => BigInt.from(this),
     };
   }
-
-  int fact() {
-    if (this < 0) {
-      throw StateError("Can't calculate factorial of a negative number.");
-    } else if (this <= 1) {
-      return 1;
-    }
-
-    return this * (this - 1).fact();
-  }
 }
 
 extension BigIntExt on BigInt {
@@ -59,11 +49,5 @@ extension BigIntExt on BigInt {
     } else {
       return b;
     }
-  }
-}
-
-extension DoubleExt on double {
-  BigInt toBigInt() {
-    return BigInt.parse(toStringAsFixed(0));
   }
 }
