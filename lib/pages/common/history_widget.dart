@@ -1,7 +1,8 @@
-import 'package:combinat/pages/common/result_widget.dart';
-import 'package:combinat/session_storage.dart';
-import 'package:combinat/utils.dart';
 import 'package:flutter/material.dart';
+
+import 'result_widget.dart';
+import '../../utils/session_storage.dart';
+import '../../utils/utils.dart';
 
 class HistoryWidget extends StatefulWidget {
   const HistoryWidget({super.key});

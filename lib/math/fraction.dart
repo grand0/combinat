@@ -1,3 +1,5 @@
+import '../utils/extensions.dart';
+
 class Fraction {
   final BigInt numerator;
   final BigInt denominator;

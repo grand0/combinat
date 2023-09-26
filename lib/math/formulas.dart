@@ -1,4 +1,4 @@
-import 'package:combinat/extensions.dart';
+import '../utils/extensions.dart';
 
 enum Formula {
   placementsNoRep(
@@ -83,6 +83,7 @@ enum Formula {
         final n = vars[0];
         return n.fact();
       case permutationsWithRep:
+        vars = vars.toList(); // create a copy of list because we will be deleting from it
         if (vars.length < 2) {
           throw ArgumentError(
               "This enum element needs at least 2 variables in the list.");

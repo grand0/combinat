@@ -1,7 +1,7 @@
-import 'package:combinat/pages/common/resizable_panel.dart';
-import 'package:combinat/responsive.dart';
 import 'package:flutter/material.dart';
 
+import '../common/resizable_panel.dart';
+import '../../utils/responsive.dart';
 import '../common/history_widget.dart';
 import 'formulas_destination.dart';
 import 'models_destination.dart';

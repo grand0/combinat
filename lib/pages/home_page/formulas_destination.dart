@@ -1,13 +1,13 @@
 import 'dart:math';
 
-import 'package:combinat/pages/common/result_widget.dart';
-import 'package:combinat/session_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
+import '../../utils/session_storage.dart';
+import '../../utils/utils.dart';
+import '../common/result_widget.dart';
 import '../../math/formulas.dart';
-import '../../utils.dart';
 import '../common/number_field.dart';
 
 class FormulasDestination extends StatefulWidget {

@@ -1,14 +1,14 @@
 import 'dart:math';
 
-import 'package:combinat/session_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../../math/fraction.dart';
 import '../../math/models.dart';
-import '../../prefs.dart';
-import '../../utils.dart';
+import '../../utils/prefs.dart';
+import '../../utils/session_storage.dart';
+import '../../utils/utils.dart';
 import '../common/number_field.dart';
 import '../common/result_widget.dart';
 

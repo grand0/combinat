@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:combinat/prefs.dart';
 import 'package:flutter/material.dart';
 
+import 'utils/prefs.dart';
 import 'pages/home_page/home_page.dart';
 import 'theme.dart' as theme;
 

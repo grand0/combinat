@@ -1,6 +1,7 @@
-import 'package:combinat/app.dart';
-import 'package:combinat/prefs.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'utils/prefs.dart';
+import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

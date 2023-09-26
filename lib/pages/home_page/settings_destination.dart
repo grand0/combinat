@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../app.dart';
-import '../../prefs.dart';
+import '../../utils/prefs.dart';
 
 class SettingsDestination extends StatefulWidget {
   const SettingsDestination({super.key});
@@ -78,7 +78,7 @@ class _SettingsDestinationState extends State<SettingsDestination> {
                       }
                       return DropdownMenuItem(
                         value: index,
-                        child: Text("${index}"),
+                        child: Text("$index"),
                       );
                     },
                   ),
