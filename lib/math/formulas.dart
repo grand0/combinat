@@ -49,61 +49,97 @@ enum Formula {
     switch (this) {
       case placementsNoRep:
         if (vars.length != 2) {
-          throw ArgumentError("This enum element needs 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs 2 variables in the list.");
         }
         final n = vars[0];
         final k = vars[1];
         if (n < k) {
           throw const FormulaException("k can't be greater than n.");
         }
-        return n.fact() ~/ (n - k).fact();
+        if (k == 0.big) {
+          return 1.big;
+        }
+        return n.partFact(n - k + 1.big);
       case placementsWithRep:
         if (vars.length != 2) {
-          throw ArgumentError("This enum element needs 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs 2 variables in the list.");
         }
         final n = vars[0];
         final k = vars[1];
         if (n < k) {
           throw const FormulaException("k can't be greater than n.");
+        } else if (k > IntExt.intMaxValue.big) {
+          throw const FormulaException(
+              "k can't be greater than 2^53-1 (app limitation).");
         }
         return n.pow(k.toInt());
       case permutationsNoRep:
         if (vars.length != 1) {
-          throw ArgumentError("This enum element needs 1 variable in the list.");
+          throw ArgumentError(
+              "This enum element needs 1 variable in the list.");
         }
         final n = vars[0];
         return n.fact();
       case permutationsWithRep:
         if (vars.length < 2) {
-          throw ArgumentError("This enum element needs at least 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs at least 2 variables in the list.");
         }
         final n = vars[0];
         final niSum = vars.skip(1).reduce((value, element) => value + element);
         if (n != niSum) {
-          throw const FormulaException("The sum of the n_i variables must equal to n.");
+          throw const FormulaException(
+              "The sum of the n_i variables must equal to n.");
         }
-        final denom = vars.skip(1).fold(BigInt.one, (previousValue, element) => previousValue * element.fact());
-        return n.fact() ~/ denom;
+        final niMax = vars
+            .skip(1)
+            .reduce((value, element) => BigIntExt.max(value, element));
+        if (niMax == n) {
+          return 1.big;
+        }
+        vars.remove(niMax);
+        final denom = vars.skip(1).fold(1.big,
+            (previousValue, element) => previousValue * element.fact());
+        return n.partFact(niMax + 1.big) ~/ denom;
       case combinationsNoRep:
         if (vars.length != 2) {
-          throw ArgumentError("This enum element needs 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs 2 variables in the list.");
         }
         final n = vars[0];
         final k = vars[1];
         if (n < k) {
           throw const FormulaException("k can't be greater than n.");
         }
-        return n.fact() ~/ (k.fact() * (n - k).fact());
+        if (k == 0.big || k == n) {
+          return 1.big;
+        }
+        BigInt from;
+        BigInt denom;
+        if (k > n - k) {
+          from = k + 1.big;
+          denom = (n - k).fact();
+        } else {
+          from = n - k + 1.big;
+          denom = k.fact();
+        }
+        return n.partFact(from) ~/ denom;
       case combinationsWithRep:
         if (vars.length != 2) {
-          throw ArgumentError("This enum element needs 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs 2 variables in the list.");
         }
-        final n = vars[0];
-        final k = vars[1];
+        BigInt n = vars[0];
+        BigInt k = vars[1];
         if (n < k) {
           throw const FormulaException("k can't be greater than n.");
+        } else if (n == 0.big) {
+          throw const FormulaException("n can't be equal to 0.");
         }
-        return (n + k - BigInt.one).fact() ~/ (k.fact() * (n - BigInt.one).fact());
+        n = n + k - 1.big;
+        return Formula.combinationsNoRep.calculate(vars);
     }
   }
 
@@ -111,27 +147,31 @@ enum Formula {
     switch (this) {
       case placementsNoRep:
         if (vars.length != 2) {
-          throw ArgumentError("This enum element needs 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs 2 variables in the list.");
         }
         final n = vars[0];
         final k = vars[1];
         return tex.replaceAll("n", "$n").replaceAll("k", "$k");
       case placementsWithRep:
         if (vars.length != 2) {
-          throw ArgumentError("This enum element needs 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs 2 variables in the list.");
         }
         final n = vars[0];
         final k = vars[1];
         return "\\overline{A}^{$k}_{$n}=$n^{$k}";
       case permutationsNoRep:
         if (vars.length != 1) {
-          throw ArgumentError("This enum element needs 1 variable in the list.");
+          throw ArgumentError(
+              "This enum element needs 1 variable in the list.");
         }
         final n = vars[0];
         return tex.replaceAll("n", "$n");
       case permutationsWithRep:
         if (vars.length < 2) {
-          throw ArgumentError("This enum element needs at least 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs at least 2 variables in the list.");
         }
         final n = vars[0];
         final niCommaSep = vars.skip(1).join(",");
@@ -139,18 +179,20 @@ enum Formula {
         return "P_{$n}($niCommaSep)=\\frac{$n!}{$niFactMult}";
       case combinationsNoRep:
         if (vars.length != 2) {
-          throw ArgumentError("This enum element needs 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs 2 variables in the list.");
         }
         final n = vars[0];
         final k = vars[1];
         return tex.replaceAll("n", "$n").replaceAll("k", "$k");
       case combinationsWithRep:
         if (vars.length != 2) {
-          throw ArgumentError("This enum element needs 2 variables in the list.");
+          throw ArgumentError(
+              "This enum element needs 2 variables in the list.");
         }
         final n = vars[0];
         final k = vars[1];
-        return "\\overline{C}^{$k}_{$n}=C^{$k}_{${n+k-BigInt.one}}";
+        return "\\overline{C}^{$k}_{$n}=C^{$k}_{${n + k - 1.big}}";
     }
   }
 }
