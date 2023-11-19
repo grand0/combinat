@@ -5,14 +5,14 @@ enum Model {
   allMarked(
     name: "All marked",
     description:
-        "n items, m of them are marked. k random items are taken (k < m). What is probability that all taken items are marked?",
+        "n items, m of them are marked. k random items are taken (k <= m). What is probability that all taken items are marked?",
     tex: r"P(A)=\frac{C^{k}_{m}}{C^{k}_{n}}",
     variables: ["n", "m", "k"],
   ),
   rMarked(
     name: "r marked",
     description:
-        "n items, m of them are marked. k random items are taken (k < m). What is probability that r of the taken items are marked?",
+        "n items, m of them are marked. k random items are taken (k <= m). What is probability that r of the taken items are marked?",
     tex: r"P(A)=\frac{C^{r}_{m}C^{k-r}_{n-m}}{C^{k}_{n}}",
     variables: ["n", "m", "k", "r"],
   );
@@ -40,8 +40,8 @@ enum Model {
         final n = vars[0];
         final m = vars[1];
         final k = vars[2];
-        if (k >= m) {
-          throw const ModelException("k must be less than m.");
+        if (k > m) {
+          throw const ModelException("k can't be greater than m.");
         } else if (k > n) {
           throw const ModelException("k can't be greater than n.");
         } else if (m > n) {
@@ -58,8 +58,8 @@ enum Model {
         final m = vars[1];
         final k = vars[2];
         final r = vars[3];
-        if (k >= m) {
-          throw const ModelException("k must be less than m.");
+        if (k > m) {
+          throw const ModelException("k can't be greater than m.");
         } else if (k > n) {
           throw const ModelException("k can't be greater than n.");
         } else if (m > n) {

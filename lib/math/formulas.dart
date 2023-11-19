@@ -68,9 +68,7 @@ enum Formula {
         }
         final n = vars[0];
         final k = vars[1];
-        if (n < k) {
-          throw const FormulaException("k can't be greater than n.");
-        } else if (k > IntExt.intMaxValue.big) {
+        if (k > IntExt.intMaxValue.big) {
           throw const FormulaException(
               "k can't be greater than 2^53-1 (app limitation).");
         }
